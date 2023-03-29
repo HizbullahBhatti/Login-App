@@ -11,6 +11,11 @@ export async function passwordValidate(values){
     return errors;
 }
 
+export async function resetPasswordValidate(values){
+    const errors = resetPassword({},values)
+    return errors;
+}
+
 const verifyUserName = (error={},values)=>{
     if(!values.username){
         error.username = toast.error('Username is required')
@@ -22,6 +27,9 @@ const verifyUserName = (error={},values)=>{
 }
 
 const verifyPassword = (error={},values)=>{
+
+    const specialChar = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]+/;
+
     if(!values.password){
         error.password = toast.error('Password is required')
     }
@@ -30,6 +38,22 @@ const verifyPassword = (error={},values)=>{
     }
     else if(values.password.length < 6){
         error.password = toast.error('Password must be atleast 6 characters')
+    }
+    else if(!specialChar.test(values.password)){
+        error.password = toast.error('Password must contain atleast one special character')
+    }
+    return error
+}
+
+const resetPassword = (error={},values)=>{
+    if(!values.confirm_pwd){
+        error.confirm_pwd = toast.error('Confirm Password is required')
+    }
+    else if(!values.password){
+        error.password = toast.error('Password is required')
+    }
+    else if(values.confirm_pwd !== values.password){
+        error.confirm_pwd = toast.error('Password and Confirm Password must be same')
     }
     return error
 }
