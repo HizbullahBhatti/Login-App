@@ -45,7 +45,6 @@ const App = () => {
   return (
     <main>
       <RouterProvider router={router}></RouterProvider>
-      <h1 className="text-3xl font-bold">Hello world!</h1>
     </main>
   );
 };
