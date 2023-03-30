@@ -11,8 +11,22 @@ export async function passwordValidate(values){
     return errors;
 }
 
-export async function resetPasswordValidate(values){
+export async function resetPasswordValidation(values){
     const errors = resetPassword({},values)
+    return errors;
+}
+
+//Validate Profile Page
+
+export async function profileValidation(values){
+    const errors = verifyEmail({},values)
+    return errors;
+}
+
+export async function registerValidation(values){
+    const errors = verifyUserName({},values)
+    verifyPassword(errors,values)
+    verifyEmail(errors,values)
     return errors;
 }
 
@@ -45,6 +59,16 @@ const verifyPassword = (error={},values)=>{
     return error
 }
 
+const verifyEmail = (error={},values)=>{
+    if(!values.email){
+        error.email = toast.error('Email is required')
+    }
+    // else if(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(values.email)){
+    //     error.email = toast.error('Email is invalid')
+    // }
+    return error
+}
+
 const resetPassword = (error={},values)=>{
     if(!values.confirm_pwd){
         error.confirm_pwd = toast.error('Confirm Password is required')
@@ -57,3 +81,4 @@ const resetPassword = (error={},values)=>{
     }
     return error
 }
+
