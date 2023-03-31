@@ -1,10 +1,10 @@
-const mongoose = require('mongoose');
-const mongodbMemoryServer = require('mongodb-memory-server'); 
+import {mongoose} from 'mongoose';
+import mongodbMemoryServer from 'mongodb-memory-server';
 //This is a package that allows us to create a mock database in memory for testing purposes
 
-const connect = async () => {
-    const mongod = await mongodbMemoryServer.create();
-    const getURI = mongod.getURI();
+const Connect = async () => {
+    const mongod = await mongodbMemoryServer.MongoMemoryServer.create();
+    const getURI = mongod.getUri();
 
     mongoose.set('strictQuery', true);
     const db = await mongoose.connect(getURI);
@@ -12,4 +12,4 @@ const connect = async () => {
     return db;
 }
 
-module.exports = connect;
+export default Connect;
