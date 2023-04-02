@@ -158,7 +158,30 @@ const getUser = async (req, res) => {
 
 //PUT: http://localhost:8080/api/updateuser
 const updateUser = async (req, res) => {
-  res.json("updateUser route");
+  
+    try {
+        const id  = req.query.id
+
+        if(id) {
+            const body = req.body
+
+            //update the data
+            userModel.updateOne({ _id:id }, body)
+            .then(()=>{
+                return res.status(201).send({data:"User Updated Successfully"})
+            })
+            .catch(err=>{
+                throw err
+            })
+        }
+        else{
+            return res.status(401).send({error:"User not found..."})
+        }
+
+
+    } catch (error) {
+        res.status(401).send({error})
+    }
 };
 
 //GET: http://localhost:8080/api/generateOTP
