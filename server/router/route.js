@@ -2,7 +2,7 @@ import { Router } from 'express';
 const router = Router();
 
 import * as controller from '../controllers/appController.js';
-import Auth from "../middleware/auth.js";
+import Auth,{localVariable} from "../middleware/auth.js";
 
 
 
@@ -15,7 +15,7 @@ router.route("/login").post(controller.verifyUser,controller.login); //Login the
 
 //GET Request
 router.route('/user/:username').get(controller.getUser); //get us er with username
-router.route('/generateOTP').get(controller.generateOTP); //generate OTP
+router.route('/generateOTP').get(controller.verifyUser,localVariable,controller.generateOTP); //generate OTP
 router.route('/verifyOTP').get(controller.verifyOTP); //verify OTP
 router.route('/createResetSession').get(controller.createResetSession); //reset all the varaibles for reset password
 

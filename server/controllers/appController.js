@@ -2,6 +2,7 @@ import userModel from "../models/userModel.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import ENV from "../config.js";
+import otpGenerator from "otp-generator";
 
 
 //Middleware for verify user
@@ -188,8 +189,8 @@ const updateUser = async (req, res) => {
 
 //GET: http://localhost:8080/api/generateOTP
 const generateOTP = async (req, res) => {
-  
-
+  req.app.locals.OTP = await otpGenerator.generate(6,{lowerCaseAlphabets:false,upperCaseAlphabets:false,specialChars:false})
+  res.status(201).send({ code:req.app.locals.OTP })
 };
 
 //GET: http://localhost:8080/api/verifyOTP
