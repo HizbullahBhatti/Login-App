@@ -195,12 +195,22 @@ const generateOTP = async (req, res) => {
 
 //GET: http://localhost:8080/api/verifyOTP
 const verifyOTP = async (req, res) => {
-  res.json("verifyOTP route");
+  const {code} = req.query
+  if(parseInt(req.app.locals.OTP) === parseInt(code)){
+    req.app.locals.OTP = null //reset the OTP after verification
+    req.app.locals.resetSession = true //create a reset session
+    return res.status(201).send({msg:"OTP Verified"})
+  }
+  res.status(400).send({error:"Invalid OTP"})
 };
 
 //GET: http://localhost:8080/api/createResetSession
 const createResetSession = async (req, res) => {
-  res.json("createResetSession route");
+  if(req.app.locals.resetSession){
+    req.app.locals.resetSession = false //allow acces to this route only once
+    return res.status(201).send({msg:"Reset Session Created"})
+  }
+  return res.status(440).send({error:"Session Expired"})
 };
 
 //PUT: http://localhost:8080/api/resetPassword
