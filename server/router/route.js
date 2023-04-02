@@ -2,6 +2,7 @@ import { Router } from 'express';
 const router = Router();
 
 import * as controller from '../controllers/appController.js';
+import Auth from "../middleware/auth.js";
 
 
 
@@ -19,7 +20,7 @@ router.route('/verifyOTP').get(controller.verifyOTP); //verify OTP
 router.route('/createResetSession').get(controller.createResetSession); //reset all the varaibles for reset password
 
 //PUT Request
-router.route('/updateUser').put(controller.updateUser); // is used to update the user details
+router.route('/updateUser').put(Auth,controller.updateUser); // is used to update the user details
 router.route('/resetPassword').put(controller.resetPassword); // use to reset the password
 
 export default router;

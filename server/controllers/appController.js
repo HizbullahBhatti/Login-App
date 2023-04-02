@@ -3,6 +3,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import ENV from "../config.js";
 
+
 //Middleware for verify user
 export const verifyUser = async (req, res, next) => {
   try {
@@ -160,13 +161,14 @@ const getUser = async (req, res) => {
 const updateUser = async (req, res) => {
   
     try {
-        const id  = req.query.id
+        //const id  = req.query.id
+        const {userId} = req.user
 
-        if(id) {
+        if(userId) {
             const body = req.body
 
             //update the data
-            userModel.updateOne({ _id:id }, body)
+            userModel.updateOne({ _id:userId }, body)
             .then(()=>{
                 return res.status(201).send({data:"User Updated Successfully"})
             })
@@ -186,7 +188,8 @@ const updateUser = async (req, res) => {
 
 //GET: http://localhost:8080/api/generateOTP
 const generateOTP = async (req, res) => {
-  res.json("generateOTP route");
+  
+
 };
 
 //GET: http://localhost:8080/api/verifyOTP
