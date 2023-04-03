@@ -8,9 +8,12 @@ import ENV from '../config.js';
 const transporter = nodemailer.createTransport({
     host: 'smtp.ethereal.email',
     port: 587,
+    secure: false, // true for 465, false for other ports
     auth: {
-        user: ENV.EMAIL,
-        pass: ENV.PASSWORD
+        user: 'alexandrine.huel@ethereal.email',
+        pass: 'bPyuGgHhduj4gM77GQ'
+        // user: ENV.EMAIL,
+        // pass: ENV.PASSWORD
     }
 });
 
@@ -22,6 +25,8 @@ let mailGenerator = new Mailgen({
     }
 })
 
+
+//POST: http://localhost:8080/api/registerMail
 export const registerMail = async(req,res)=>{
     try {
         const {username,email,text,subject} = req.body;
@@ -30,14 +35,6 @@ export const registerMail = async(req,res)=>{
                 name:username,
                 intro:text || "Welcome to Our App",
                 outro:"Need help, or have questions? Just reply to this email, we'd love to help.",
-                action:{
-                    instructions:"To get started with Mailgen, please click here:",
-                    button:{
-                        color:"#22BC66",
-                        text:"Confirm your account",
-                        link:"https://mailgen.js/confirm?s=d972f8945d61b8b8c7b0fbd1e2c9f9a1"
-                    }
-                }
                 
             }
         }
@@ -57,6 +54,7 @@ export const registerMail = async(req,res)=>{
 
         res.status(200).send({message:"Check your mail for verification"});
     } catch (error) {
-        res.status(404).send({error});
+        res.status(500).send({error});
+        console.log(error);
     }
 }
