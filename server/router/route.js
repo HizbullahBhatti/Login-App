@@ -11,7 +11,7 @@ import {registerMail} from "../controllers/mailer.js";
 //POST Request 
 router.route('/register').post(controller.register) //Register User
 router.route("/registerMail").post(registerMail); //Send the verification mail to the user
-router.route("/authenticate").post((req,res)=>res.end()); //Authenticate the user
+router.route("/authenticate").post(controller.verifyUser,(req,res)=>res.end()); //Authenticate the user
 router.route("/login").post(controller.verifyUser,controller.login); //Login the user
 
 //GET Request
