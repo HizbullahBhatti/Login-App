@@ -1,7 +1,17 @@
 import axios from 'axios';
-axios.defaults.baseURL = process.env.REACT_APP_SERVER_DOMAIN
+import jwt_decode from 'jwt-decode';
+axios.defaults.baseURL = process.env.REACT_APP_SERVER_DOMAIN;
 
-export const authenticate = async()=>{
+//get username from token
+export const getUsername = async()=>{
+    const token = localStorage.getItem('token')
+    if(!token) return Promise.reject({error:'No token found'});
+    let decode = jwt_decode(token)
+    console.log(decode)
+    return decode
+}
+
+export const authenticate = async(username)=>{
     try {
         return await axios.post('/api/authenticate',{username})
     } catch (error) {
@@ -26,7 +36,7 @@ export const registerUser = async(credentials)=>{
         
         //send email for registration
         if(status === 201){
-            await axios.post('/api/sendmail',{username,email:email,text:msg})
+            await axios.post('/api/registerMail',{username,email:email,text:msg})
         }
 
         return Promise.resolve(msg)

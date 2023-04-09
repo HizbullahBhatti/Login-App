@@ -1,8 +1,20 @@
 import { toast } from "react-hot-toast"
+import {authenticate} from './helper'
 // Validate Username
 
 export async function userNameValidate(values){
     const errors = verifyUserName({},values)
+
+    if(values.username){    
+        // check user exist or not
+        const { status } = await authenticate(values.username);
+        console.log(status)
+        
+        if(status !== 200){
+            errors.exist = toast.error('User does not exist...!')
+        }
+    }
+
     return errors;
 }
 
