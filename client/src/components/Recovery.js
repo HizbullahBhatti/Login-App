@@ -1,12 +1,16 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import avatar from "../assets/profile.png";
+import React, { useState } from "react";
 import styles from "../styles/Username.module.css";
 import { Toaster } from "react-hot-toast";
 import { useFormik } from "formik";
 import { passwordValidate } from "../helper/validate";
+import { useAuthStore } from "../store/Store";
 
 const Recovery = () => {
+  const {username} = useAuthStore(state => state.auth);
+  const[OTP,setOTP] = useState('')
+
+
+
   const formik = useFormik({
     initialValues: {
       password: "",
