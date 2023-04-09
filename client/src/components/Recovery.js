@@ -1,27 +1,51 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "../styles/Username.module.css";
-import { Toaster } from "react-hot-toast";
-import { useFormik } from "formik";
-import { passwordValidate } from "../helper/validate";
+import { Toaster, toast } from "react-hot-toast";
 import { useAuthStore } from "../store/Store";
+import {generateOTP,verifyOTP} from '../helper/helper'
+import { useNavigate } from "react-router-dom";
 
 const Recovery = () => {
+  const navigate = useNavigate();
   const {username} = useAuthStore(state => state.auth);
   const[OTP,setOTP] = useState('')
 
+  useEffect(()=>{
+    generateOTP(username).then((OTP)=>{
+      console.log(OTP)
+      if(OTP) return toast.success('OTP sent to your email');
+      toast.error('Problem While Generating OTP')
+    })
+  },[username]);
 
+  const onSubmit = async(e) => {
+    e.preventDefault();
 
-  const formik = useFormik({
-    initialValues: {
-      password: "",
-    },
-    validate: passwordValidate,
-    validateOnBlur: false,
-    validateOnChange: false,
-    onSubmit: async (values) => {
-      console.log(values);
-    },
-  });
+    try {
+      let {status}= await verifyOTP({username , code:OTP})
+    if(status === 201){
+      toast.success('OTP Verified')
+      return navigate('/reset')
+    }
+
+    } catch (error) {
+      toast.error('OTP does not match !')
+    
+    } 
+  }
+
+  //handler for reset
+
+  const resendOTP = ()=>{
+    let sendPromise = generateOTP(username)
+    toast.promise(sendPromise,{
+      loading:'Sending OTP',
+      success: <b>OTP has been send to your email</b>,
+      error:<b>Could not send it!</b>
+    })
+
+    sendPromise.then((OTP)=>{console.log(OTP)})
+  }
 
   return (
     <div className="conatiner mx-auto">
@@ -35,7 +59,7 @@ const Recovery = () => {
             </span>
           </div>
 
-          <form className="pt-20" onSubmit={formik.handleSubmit}>
+          <form className="pt-20" onSubmit={onSubmit}>
             <div className="textbox flex flex-col items-center gap-6">
               <div className="input text-center">
                 <span className="py-4 text-sm text-left text-gray-500">
@@ -45,6 +69,7 @@ const Recovery = () => {
                   className={styles.textbox}
                   type="password"
                   placeholder="OTP"
+                  onChange={(e)=>setOTP(e.target.value)}
                 />
               </div>
 
@@ -52,15 +77,16 @@ const Recovery = () => {
                 Sign in
               </button>
             </div>
-            <div className="text-center py-4">
+            
+          </form>
+          <div className="text-center py-4">
               <span className="text-gray-500">
                 Can't get OTP? &nbsp;
-                <button className="text-green-600">
+                <button className="text-green-600" onClick={resendOTP}>
                    Resend
                 </button>
               </span>
             </div>
-          </form>
         </div>
       </div>
     </div>
