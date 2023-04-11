@@ -207,8 +207,8 @@ const verifyOTP = async (req, res) => {
 //GET: http://localhost:8080/api/createResetSession
 const createResetSession = async (req, res) => {
   if(req.app.locals.resetSession){
-    req.app.locals.resetSession = false //allow acces to this route only once
-    return res.status(201).send({msg:"Reset Session Created"})
+     //allow acces to this route only once
+    return res.status(201).send({ flag : req.app.locals.resetSession})
   }
   return res.status(440).send({error:"Session Expired"})
 };

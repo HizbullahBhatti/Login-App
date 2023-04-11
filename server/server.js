@@ -15,7 +15,7 @@ app.disable('x-powered-by'); //security measure to hide the server type from the
 app.use(bodyParser.json({ limit: '10mb' })); //limit the size of the request body
 app.use(bodyParser.urlencoded({ limit: '10mb', extended: true })); //
 
-const port = 8080;
+const port = process.env.PORT || 5000;
 
 //HTTP get Request
 app.get('/',(req,res)=>{
